@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Corporate Gifting — GiftGenius</title>
+<meta name="description" content="Premium corporate gifts for clients, teams, and partners.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/css/category.css"/>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="../index.html"><div class="logo-mark">🎁</div>Gift<em>Genius</em></a>
+  <nav class="header-nav">
+    <a href="../index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="quiz.html">Gift Quiz</a>
+    <a href="cultureconnect.html">CultureConnect</a>
+    <a href="festival.html">Festival Special</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html">My Account</a>
+    <a href="cart.html" class="active">🛒 Cart</a>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+  </nav>
+</header>
+
+<div class="breadcrumb"><a href="../index.html">Home</a> › <a href="categories.html">Categories</a> › <span id="bcLabel"></span></div>
+
+<section class="cat-hero">
+  <div class="cat-hero-inner">
+    <div class="cat-eyebrow"><span class="ln"></span><span id="heroEyebrow"></span><span class="ln"></span></div>
+    <h1 id="heroTitle"></h1>
+    <p id="heroDesc"></p>
+    <button class="cat-hero-cta" onclick="document.getElementById('catToolbar').scrollIntoView({behavior:'smooth'})">Shop the Collection →</button>
+  </div>
+</section>
+
+<div class="cat-toolbar" id="catToolbar">
+  <p class="result-count" id="resultCount"></p>
+  <div class="toolbar-actions">
+    <select class="sort-select" id="sortSelect">
+      <option value="featured">Featured</option>
+      <option value="newest">Newest</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="rating">Top Rated</option>
+    </select>
+    <button class="filter-toggle" id="filterToggleBtn">⚙ Filters <span class="count" id="filterCount" style="display:none">0</span></button>
+  </div>
+</div>
+
+<div class="chip-row" id="chipRow" hidden></div>
+
+<p class="section-block" id="curatedNote" style="padding-bottom:0;color:var(--text-muted);font-size:12.5px;font-style:italic" hidden>
+  ✦ A curated edit from our full collection — there isn't a large dedicated range for this occasion yet, so we've picked the closest, most fitting gifts.
+</p>
+
+<div class="cat-body">
+  <div class="filter-scrim" id="filterScrim"></div>
+  <aside class="filter-panel" id="filterPanel"></aside>
+  <div>
+    <div class="product-grid" id="productGrid"></div>
+    <div class="cat-empty" id="catEmpty" hidden>
+      <div class="cat-empty-icon">🎁</div>
+      <h3>No gifts match those filters</h3>
+      <p>Try widening your price range or clearing a filter to see more options.</p>
+      <button class="btn-outline" onclick="document.querySelectorAll('.filter-opt input').forEach(i=>i.checked=false)">Clear filters</button>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="curatedSection">
+  <h2>You Might Also Love 💫</h2>
+  <div class="product-grid" id="curatedGrid"></div>
+</div>
+
+<div class="section-block">
+  <h2>Explore Other Occasions</h2>
+  <div class="related-grid" id="relatedGrid"></div>
+</div>
+
+<!-- Quick View -->
+<div class="qv-overlay" id="qvOverlay">
+  <div class="qv-modal">
+    <button class="qv-close" id="qvClose" aria-label="Close quick view">✕</button>
+    <div class="qv-img"><img id="qvImg" alt=""/></div>
+    <div class="qv-info">
+      <p class="qv-cat" id="qvCat"></p>
+      <h3 class="qv-name" id="qvName"></h3>
+      <p class="qv-rating" id="qvRating"></p>
+      <p class="qv-price"><span class="og" id="qvOg"></span><span class="now" id="qvNow"></span></p>
+      <p class="qv-desc" id="qvDesc"></p>
+      <button class="btn-primary" id="qvAddBtn">Add to Cart →</button>
+      <button class="btn-outline" id="qvDetailsBtn" style="width:100%">View Full Details</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<footer>© 2026 GiftGenius. All rights reserved.</footer>
+
+<script src="../assets/js/products.js"></script>
+<script src="../assets/js/category.js"></script>
+<script>
+  Category.render({
+    pageTitle: "Corporate Gifting \u2014 GiftGenius",
+    breadcrumb: "Corporate Gifting",
+    eyebrow: "GiftGenius \u00b7 Corporate Gifting",
+    heroTitle: "Corporate Gifting, <em>Done Tastefully</em>",
+    heroDesc: "Premium, presentable gifts for clients, teams, and partners \u2014 no confetti required.",
+    match: p => (p.tags||[]).includes('premium') && (p.category==='gift sets' || p.category==='food & sweets'),
+    curatedFallback: p => (p.tags||[]).includes('premium'),
+    related: ["premium", "personalized", "festival"]
+  });
+</script>
+</body>
+</html>

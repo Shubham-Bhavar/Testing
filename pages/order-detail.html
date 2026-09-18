@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Order Details — GiftGenius</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --cream:#E6F7FA; --cream-dark:#D0EFF5; --gold:#B8791A; --gold-light:#D4AF37; --gold-dim:rgba(212,175,55,0.12);
+    --ink:#0F2225; --charcoal:#1A3035; --warm-mid:#3A5A60; --border-soft:#B0DDE6; --white:#FFFFFF;
+    --danger:#B83232; --success:#1A7A5E; --teal:#6EC6CF; --teal-dark:#3A8F98; --teal-pale:rgba(110,198,207,0.12);
+    --font-serif:'Cormorant Garamond',Georgia,serif; --font-sans:'Outfit',sans-serif; --font-mono:'DM Mono',monospace;
+    --radius:14px; --radius-sm:8px; --shadow-sm:0 2px 16px rgba(26,22,18,0.07); --glass-bg:rgba(230,247,250,0.55); --glass-border:rgba(255,255,255,0.35);
+    --trans:0.28s cubic-bezier(.4,0,.2,1); --bg:var(--cream); --surface:var(--white); --text:var(--ink); --text-muted:var(--warm-mid);
+  }
+  [data-theme="dark"]{
+    --bg:#0F1A1C; --cream-dark:#162428; --surface:#1E2A2D; --white:#1E2A2D; --text:#F5F5F5; --ink:#F5F5F5;
+    --text-muted:#8AABB0; --charcoal:#243035; --border-soft:#263840; --teal:#4FB3BF; --teal-pale:rgba(79,179,191,0.12);
+    --shadow-sm:0 2px 16px rgba(0,0,0,0.4); --gold-dim:rgba(212,175,55,0.1); --glass-bg:rgba(15,26,28,0.55); --glass-border:rgba(255,255,255,0.08);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-sans);background:var(--bg);color:var(--text);transition:background .3s,color .3s;position:relative}
+  body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  [data-theme="dark"] body::before{opacity:.05;mix-blend-mode:overlay}
+  img{display:block;max-width:100%}
+
+  .site-header{position:sticky;top:0;z-index:200;background:var(--glass-bg);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--glass-border);padding:0 5%;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .logo{font-family:var(--font-serif);font-size:24px;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:9px}
+  .logo-mark{width:32px;height:32px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+  [data-theme="dark"] .logo-mark{background:#C5E8F0}
+  .logo em{font-style:italic;color:var(--gold)}
+  .header-nav{display:flex;align-items:center;gap:20px}
+  .header-nav a{font-size:13.5px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:color var(--trans)}
+  .header-nav a:hover,.header-nav a.active{color:var(--gold)}
+  .theme-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border-soft);background:transparent;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);transition:var(--trans)}
+  .theme-btn:hover{border-color:var(--gold);background:var(--gold-dim)}
+  .demo-banner{background:var(--gold-dim);border-bottom:1px solid rgba(184,121,26,.25);text-align:center;padding:9px 16px;font-size:12.5px;color:var(--gold);font-family:var(--font-mono)}
+
+  .breadcrumb{max-width:760px;margin:0 auto;padding:20px 24px 0;font-size:12.5px;color:var(--text-muted);font-family:var(--font-mono)}
+  .breadcrumb a{color:var(--text-muted);text-decoration:none} .breadcrumb a:hover{color:var(--gold)}
+
+  .wrap{max-width:760px;margin:0 auto;padding:16px 24px 64px}
+  .order-header{background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow-sm);margin-bottom:18px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px}
+  .oh-id{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+  .oh-val{font-size:1.15rem;font-weight:700;color:var(--text);font-family:var(--font-mono)}
+  .status-pill{padding:6px 16px;border-radius:20px;font-size:.85rem;font-weight:600}
+  .status-pill.delivered{background:rgba(26,122,94,.12);color:var(--success)}
+  .status-pill.in-transit{background:var(--gold-dim);color:var(--gold)}
+  .status-pill.processing{background:var(--teal-pale);color:var(--teal-dark)}
+
+  .card{background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm);margin-bottom:18px}
+  .card h3{font-family:var(--font-serif);font-size:1.1rem;margin-bottom:16px;color:var(--text)}
+
+  .timeline{position:relative;padding-left:30px}
+  .timeline::before{content:'';position:absolute;left:10px;top:6px;bottom:6px;width:2px;background:var(--border-soft)}
+  .t-item{position:relative;margin-bottom:20px}
+  .t-item:last-child{margin-bottom:0}
+  .t-dot{position:absolute;left:-30px;width:22px;height:22px;border-radius:50%;border:3px solid var(--border-soft);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:.65rem}
+  .t-item.done .t-dot{border-color:var(--success);background:var(--success);color:#fff}
+  .t-item.active .t-dot{border-color:var(--gold);background:var(--gold);color:var(--ink)}
+  .t-title{font-weight:600;font-size:.9rem}
+  .t-item.done .t-title{color:var(--text)}
+  .t-item.active .t-title{color:var(--gold)}
+  .t-item:not(.done):not(.active) .t-title{color:var(--border-soft)}
+
+  .mini-item{display:flex;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-soft)}
+  .mini-item:last-child{border-bottom:none}
+  .mini-item img{width:56px;height:56px;border-radius:var(--radius-sm);object-fit:cover;background:var(--cream-dark)}
+  .mini-item-name{font-weight:600;font-size:.9rem;color:var(--text)}
+  .mini-item-sub{font-size:.8rem;color:var(--text-muted)}
+  .mini-item-price{margin-left:auto;font-weight:700;color:var(--gold);font-family:var(--font-mono)}
+
+  .detail-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border-soft);font-size:.9rem}
+  .detail-row:last-child{border-bottom:none}
+  .detail-row .label{color:var(--text-muted)}
+  .detail-row .value{font-weight:600;color:var(--text)}
+
+  .btn-outline{display:inline-block;margin-top:6px;padding:11px 22px;border:1.5px solid var(--border-soft);color:var(--text);border-radius:var(--radius-sm);font-size:13px;font-weight:500;text-decoration:none;transition:all var(--trans)}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+  footer{text-align:center;padding:32px 24px;color:var(--text-muted);font-size:13px;border-top:1px solid var(--border-soft);background:var(--surface);font-family:var(--font-mono)}
+  @media(max-width:768px){.header-nav a:not(.active){display:none}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="../index.html"><div class="logo-mark">🎁</div>Gift<em>Genius</em></a>
+  <nav class="header-nav">
+    <a href="../index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="search.html">Search</a>
+    <a href="quiz.html">Gift Quiz</a>
+    <a href="cultureconnect.html">CultureConnect</a>
+    <a href="festival.html">Festival Special</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html">My Account</a>
+    <a href="orders.html" class="active">Order History</a>
+    <a href="cart.html">🛒 Cart</a>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+  </nav>
+</header>
+
+<div class="demo-banner">✦ Demo preview — sample order detail. Real tracking data arrives with the backend.</div>
+
+<div class="breadcrumb"><a href="orders.html">Order History</a> › <span id="bc-id">Order</span></div>
+<div class="wrap" id="wrap"></div>
+
+<footer>© 2026 GiftGenius. All rights reserved.</footer>
+
+<script>
+  const saved = localStorage.getItem('gg_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  themeBtn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('gg_theme', next);
+    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+
+  const DEMO_ORDERS = {
+    'GG-118203': { date: '2 Sep 2026', total: 1798, status: 'delivered', pay: 'UPI', address: 'Pune, Maharashtra',
+      items: [{ name: 'Engraved Timepiece', img: 'https://etchcraftemporium.in/cdn/shop/files/ChatGPT_Image_Aug_14_2025_07_16_41_PM.png?v=1755179225&width=800', qty: 1, price: 1299 },
+              { name: 'Luxury Hamper Box', img: 'https://t4.ftcdn.net/jpg/05/32/64/27/240_F_532642742_3lStpC5P0U4FrndE82prkwm61F5OnQgj.jpg', qty: 1, price: 499 }] },
+    'GG-482910': { date: '9 Sep 2026', total: 499, status: 'in-transit', pay: 'UPI', address: 'Mumbai, Maharashtra',
+      items: [{ name: 'Luxury Hamper Box', img: 'https://t4.ftcdn.net/jpg/05/32/64/27/240_F_532642742_3lStpC5P0U4FrndE82prkwm61F5OnQgj.jpg', qty: 1, price: 499 }] },
+    'GG-903217': { date: '11 Sep 2026', total: 599, status: 'processing', pay: 'Card', address: 'Pune, Maharashtra',
+      items: [{ name: 'Classic Rose Bouquet', img: 'https://www.uflowershop.com/1294-large_default/valentine-s-day-classic-red-rose-bouquet.webp', qty: 1, price: 599 }] }
+  };
+
+  const id = localStorage.getItem('gg_viewed_order');
+  let order = id ? DEMO_ORDERS[id] : null;
+
+  if (!order && id) {
+    try {
+      const last = JSON.parse(localStorage.getItem('gg_last_order') || 'null');
+      if (last && last.id === id) {
+        order = { date: 'Just now', total: last.total || 0, status: 'processing', pay: last.pay || 'UPI', address: 'Your saved address',
+          items: (last.items || []).map(i => ({ name: i.name, img: i.img, qty: i.qty || 1, price: i.price })) };
+      }
+    } catch(_) {}
+  }
+
+  const wrap = document.getElementById('wrap');
+  document.getElementById('bc-id').textContent = id || 'Order';
+
+  if (!order) {
+    wrap.innerHTML = `<div class="card" style="text-align:center;padding:48px 24px"><h3>Order not found</h3><p style="color:var(--text-muted);margin-bottom:16px">We couldn't find that order.</p><a class="btn-outline" href="orders.html">← Back to Order History</a></div>`;
+  } else {
+    const statusMap = { processing: '🔄 Processing', 'in-transit': '🚚 In Transit', delivered: '✅ Delivered' };
+    const isDelivered = order.status === 'delivered';
+    const isTransit = order.status === 'in-transit';
+
+    wrap.innerHTML = `
+      <div class="order-header">
+        <div><div class="oh-id">Order ID</div><div class="oh-val">${id}</div><div style="font-size:.82rem;color:var(--text-muted);margin-top:4px">Placed on ${order.date}</div></div>
+        <div><div class="oh-id">Status</div><span class="status-pill ${order.status}">${statusMap[order.status]}</span></div>
+      </div>
+
+      <div class="card">
+        <h3>Order Timeline</h3>
+        <div class="timeline">
+          <div class="t-item done"><div class="t-dot">✓</div><div class="t-title">Order Placed</div></div>
+          <div class="t-item ${isDelivered || isTransit ? 'done' : 'active'}"><div class="t-dot">${isDelivered || isTransit ? '✓' : '📦'}</div><div class="t-title">Packed &amp; Gift Wrapped</div></div>
+          <div class="t-item ${isDelivered ? 'done' : isTransit ? 'active' : ''}"><div class="t-dot">${isDelivered ? '✓' : '🚚'}</div><div class="t-title">Out for Delivery</div></div>
+          <div class="t-item ${isDelivered ? 'done' : ''}"><div class="t-dot">${isDelivered ? '✓' : '🎁'}</div><div class="t-title">Delivered</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Items</h3>
+        ${order.items.map(i => `
+          <div class="mini-item">
+            <img src="${i.img}" alt="${i.name}"/>
+            <div><div class="mini-item-name">${i.name}</div><div class="mini-item-sub">Qty: ${i.qty}</div></div>
+            <div class="mini-item-price">₹${i.price.toLocaleString('en-IN')}</div>
+          </div>`).join('')}
+      </div>
+
+      <div class="card">
+        <h3>Summary</h3>
+        <div class="detail-row"><span class="label">Delivery Address</span><span class="value">${order.address}</span></div>
+        <div class="detail-row"><span class="label">Payment Method</span><span class="value">${order.pay}</span></div>
+        <div class="detail-row"><span class="label">Order Total</span><span class="value">₹${order.total.toLocaleString('en-IN')}</span></div>
+      </div>
+
+      <a class="btn-outline" href="orders.html">← Back to Order History</a>
+    `;
+  }
+</script>
+</body>
+</html>

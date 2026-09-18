@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shop by Occasion — GiftGenius</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/css/category.css"/>
+<style>
+  .hub-hero{padding:56px 5% 24px;text-align:center;max-width:640px;margin:0 auto}
+  .hub-hero h1{font-family:var(--font-serif);font-size:clamp(1.9rem,4vw,2.6rem);font-weight:700;color:var(--text);margin-bottom:10px}
+  .hub-hero p{color:var(--text-muted);font-size:14.5px}
+  .hub-grid{max-width:1100px;margin:0 auto;padding:24px 24px 72px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  @media(max-width:980px){.hub-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:640px){.hub-grid{grid-template-columns:repeat(2,1fr)}}
+  .hub-tile{display:block;background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);padding:28px 18px;text-align:center;text-decoration:none;transition:all var(--trans-luxury);opacity:0;transform:translateY(14px)}
+  .hub-tile.visible{animation:hubIn .5s ease forwards}
+  @keyframes hubIn{to{opacity:1;transform:translateY(0)}}
+  @media(prefers-reduced-motion:reduce){.hub-tile{animation:none!important;opacity:1!important;transform:none!important}}
+  .hub-tile:hover{border-color:var(--gold);transform:translateY(-5px);box-shadow:var(--shadow-md)}
+  .hub-tile .ic{font-size:2.2rem;margin-bottom:10px}
+  .hub-tile .tt{font-family:var(--font-serif);font-size:1.05rem;font-weight:600;color:var(--text)}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="../index.html"><div class="logo-mark">🎁</div>Gift<em>Genius</em></a>
+  <nav class="header-nav">
+    <a href="../index.html">Home</a>
+    <a href="categories.html" class="active">Categories</a>
+    <a href="quiz.html">Gift Quiz</a>
+    <a href="cultureconnect.html">CultureConnect</a>
+    <a href="festival.html">Festival Special</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html">My Account</a>
+    <a href="cart.html">🛒 Cart</a>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+  </nav>
+</header>
+
+<div class="breadcrumb"><a href="../index.html">Home</a> › <span>Categories</span></div>
+
+<div class="hub-hero">
+  <h1>Shop by Occasion</h1>
+  <p>Every occasion deserves its own kind of thoughtful — find gifts curated specifically for the moment.</p>
+</div>
+
+<div class="hub-grid" id="hubGrid"></div>
+
+<footer>© 2026 GiftGenius. All rights reserved.</footer>
+
+<script src="../assets/js/category.js"></script>
+<script>
+  const saved = localStorage.getItem('gg_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  themeBtn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('gg_theme', next);
+    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+
+  document.getElementById('hubGrid').innerHTML = window.CATEGORY_LIST.map(c =>
+    `<a class="hub-tile" href="${c.path}"><div class="ic">${c.icon}</div><div class="tt">${c.title}</div></a>`
+  ).join('');
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.hub-tile').forEach((t, i) => setTimeout(() => t.classList.add('visible'), i * 40));
+  });
+</script>
+</body>
+</html>

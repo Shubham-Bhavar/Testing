@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Your Wishlist — GiftGenius</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --cream:#E6F7FA; --cream-dark:#D0EFF5; --gold:#B8791A; --gold-light:#D4AF37; --gold-dim:rgba(212,175,55,0.12);
+    --ink:#0F2225; --charcoal:#1A3035; --warm-mid:#3A5A60; --border-soft:#B0DDE6; --white:#FFFFFF;
+    --danger:#B83232; --success:#1A7A5E; --teal:#6EC6CF; --teal-dark:#3A8F98; --teal-pale:rgba(110,198,207,0.12);
+    --seal:#7A2036; --seal-light:#A13049;
+    --font-serif:'Cormorant Garamond',Georgia,serif; --font-sans:'Outfit',sans-serif; --font-mono:'DM Mono',monospace;
+    --radius:14px; --radius-sm:8px; --shadow-sm:0 2px 16px rgba(26,22,18,0.07); --shadow-md:0 8px 36px rgba(26,22,18,0.12);
+    --trans:0.28s cubic-bezier(.4,0,.2,1); --trans-luxury:0.6s cubic-bezier(.16,1,.3,1);
+    --glass-bg:rgba(230,247,250,0.55); --glass-border:rgba(255,255,255,0.35);
+    --bg:var(--cream); --surface:var(--white); --text:var(--ink); --text-muted:var(--warm-mid); --header-bg:rgba(230,247,250,0.95);
+  }
+  [data-theme="dark"]{
+    --bg:#0F1A1C; --cream-dark:#162428; --surface:#1E2A2D; --white:#1E2A2D; --text:#F5F5F5; --ink:#F5F5F5;
+    --text-muted:#8AABB0; --charcoal:#243035; --border-soft:#263840; --teal:#4FB3BF; --teal-pale:rgba(79,179,191,0.12);
+    --header-bg:rgba(15,26,28,0.97); --shadow-sm:0 2px 16px rgba(0,0,0,0.4); --shadow-md:0 8px 36px rgba(0,0,0,0.5); --gold-dim:rgba(212,175,55,0.1);
+    --seal:#B23A56; --seal-light:#D1516E; --glass-bg:rgba(15,26,28,0.55); --glass-border:rgba(255,255,255,0.08);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-sans);background:var(--bg);color:var(--text);transition:background .3s,color .3s;position:relative}
+  body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  [data-theme="dark"] body::before{opacity:.05;mix-blend-mode:overlay}
+  img{display:block;max-width:100%}
+
+  .site-header{position:sticky;top:0;z-index:200;background:var(--glass-bg);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--glass-border);padding:0 5%;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .logo{font-family:var(--font-serif);font-size:24px;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:9px}
+  .logo-mark{width:32px;height:32px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+  [data-theme="dark"] .logo-mark{background:#C5E8F0}
+  .logo em{font-style:italic;color:var(--gold)}
+  .header-nav{display:flex;align-items:center;gap:20px}
+  .header-nav a{font-size:13.5px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:color var(--trans)}
+  .header-nav a:hover,.header-nav a.active{color:var(--gold)}
+  .theme-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border-soft);background:transparent;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);transition:var(--trans)}
+  .theme-btn:hover{border-color:var(--gold);background:var(--gold-dim)}
+
+  .page-head{max-width:1140px;margin:0 auto;padding:44px 24px 8px}
+  .page-head .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+  .page-head h1{font-family:var(--font-serif);font-size:clamp(1.9rem,3.4vw,2.6rem);font-weight:700;color:var(--text);margin-bottom:6px}
+  .page-head p{color:var(--text-muted);font-size:14px}
+
+  .wl-wrap{max-width:1140px;margin:0 auto;padding:24px 24px 72px}
+  .wl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  @media(max-width:980px){.wl-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:720px){.wl-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.wl-grid{grid-template-columns:1fr}}
+
+  .wl-card{background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:transform var(--trans-luxury),box-shadow var(--trans-luxury),border-color var(--trans);opacity:0;transform:translateY(16px)}
+  .wl-card.visible{animation:wlReveal .5s ease forwards}
+  @keyframes wlReveal{to{opacity:1;transform:translateY(0)}}
+  .wl-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:var(--gold)}
+  .wl-img{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--cream-dark);cursor:pointer}
+  .wl-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .wl-card:hover .wl-img img{transform:scale(1.06)}
+  .wl-remove{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(15,34,37,.72);backdrop-filter:blur(6px);border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--trans)}
+  .wl-remove:hover{background:var(--danger)}
+  .wl-body{padding:16px 18px 18px}
+  .wl-cat{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-dark);margin-bottom:6px}
+  [data-theme="dark"] .wl-cat{color:var(--teal)}
+  .wl-name{font-family:var(--font-serif);font-size:1.08rem;font-weight:600;color:var(--text);margin-bottom:10px;cursor:pointer;line-height:1.25}
+  .wl-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
+  .wl-now{font-family:var(--font-serif);font-size:1.2rem;font-weight:700;color:var(--text)}
+  .wl-og{font-size:11px;color:var(--text-muted);text-decoration:line-through;font-family:var(--font-mono)}
+  .wl-add{width:100%;padding:10px;background:var(--ink);color:var(--cream);border:none;border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--trans)}
+  .wl-add:hover{background:var(--gold);color:var(--ink)}
+  .wl-add:disabled{background:var(--border-soft);color:var(--text-muted);cursor:default}
+
+  .wl-empty{max-width:440px;margin:60px auto;text-align:center;padding:0 24px}
+  .wl-empty-icon{font-size:3rem;margin-bottom:14px;opacity:.8}
+  .wl-empty h3{font-family:var(--font-serif);font-size:1.5rem;margin-bottom:8px;color:var(--text)}
+  .wl-empty p{color:var(--text-muted);font-size:14px;margin-bottom:22px;line-height:1.7}
+  .btn-shop{display:inline-block;padding:13px 30px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--ink);border-radius:var(--radius-sm);font-weight:600;font-size:.9rem;text-decoration:none;transition:all var(--trans-luxury)}
+  .btn-shop:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(184,121,26,.35)}
+
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--charcoal);color:var(--cream);padding:13px 26px;border-radius:40px;font-size:13.5px;font-weight:500;box-shadow:var(--shadow-md);transition:all .35s cubic-bezier(.34,1.56,.64,1);z-index:999;white-space:nowrap;opacity:0}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  footer{text-align:center;padding:32px 24px;color:var(--text-muted);font-size:13px;border-top:1px solid var(--border-soft);background:var(--surface);font-family:var(--font-mono)}
+  @media(max-width:768px){.header-nav a:not(.active){display:none}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="../index.html"><div class="logo-mark">🎁</div>Gift<em>Genius</em></a>
+  <nav class="header-nav">
+    <a href="../index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="search.html">Search</a>
+    <a href="quiz.html">Gift Quiz</a>
+    <a href="cultureconnect.html">CultureConnect</a>
+    <a href="festival.html">Festival Special</a>
+    <a href="wishlist.html" class="active">Wishlist</a>
+    <a href="account.html">My Account</a>
+    <a href="cart.html">🛒 Cart</a>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+  </nav>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">Saved for later</p>
+  <h1>Your Wishlist</h1>
+  <p id="wl-count-label">0 items saved</p>
+</div>
+
+<div class="wl-wrap" id="wl-wrap"></div>
+
+<div class="toast" id="toast"></div>
+<footer>© 2026 GiftGenius. All rights reserved.</footer>
+
+<script src="../assets/js/products.js"></script>
+<script>
+  const saved = localStorage.getItem('gg_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  themeBtn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('gg_theme', next);
+    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+
+  function getWishlist(){
+    try { return JSON.parse(localStorage.getItem('gg_wishlist') || '[]'); } catch(_) { return []; }
+  }
+  function setWishlist(arr){ localStorage.setItem('gg_wishlist', JSON.stringify(arr)); }
+
+  function render(){
+    const ids = getWishlist();
+    const products = ids.map(id => getProductById(Number(id))).filter(Boolean);
+    document.getElementById('wl-count-label').textContent = products.length
+      ? `${products.length} item${products.length > 1 ? 's' : ''} saved`
+      : 'Nothing saved yet';
+
+    const wrap = document.getElementById('wl-wrap');
+
+    if (!products.length) {
+      wrap.innerHTML = `
+        <div class="wl-empty">
+          <div class="wl-empty-icon">🤍</div>
+          <h3>Your wishlist is empty</h3>
+          <p>Tap the heart on any gift you love and it'll show up here, ready whenever you are.</p>
+          <a class="btn-shop" href="../index.html">Browse Gifts →</a>
+        </div>`;
+      return;
+    }
+
+    wrap.innerHTML = `<div class="wl-grid" id="wl-grid">${products.map(buildCard).join('')}</div>`;
+    setTimeout(() => document.querySelectorAll('.wl-card').forEach(c => c.classList.add('visible')), 30);
+
+    document.querySelectorAll('.wl-img, .wl-name').forEach(el => {
+      el.addEventListener('click', () => { localStorage.setItem('gg_viewed_product', el.dataset.id); location.href = 'product.html'; });
+    });
+    document.querySelectorAll('.wl-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = Number(btn.dataset.id);
+        setWishlist(getWishlist().filter(x => Number(x) !== id));
+        showToast('Removed from wishlist');
+        render();
+      });
+    });
+    document.querySelectorAll('.wl-add').forEach(btn => {
+      btn.addEventListener('click', () => addToCart(btn, Number(btn.dataset.id)));
+    });
+  }
+
+  function buildCard(p){
+    return `
+      <div class="wl-card" data-craft="all">
+        <div class="wl-img" data-id="${p.id}">
+          <img src="${p.image}" alt="${p.alt}" loading="lazy"/>
+          <button class="wl-remove" data-id="${p.id}" title="Remove from wishlist">✕</button>
+        </div>
+        <div class="wl-body">
+          <div class="wl-cat">${p.category}</div>
+          <h3 class="wl-name" data-id="${p.id}">${p.name}</h3>
+          <div class="wl-price-row">
+            <span class="wl-now">₹${p.price.toLocaleString('en-IN')}</span>
+            <span class="wl-og">₹${p.originalPrice.toLocaleString('en-IN')}</span>
+          </div>
+          <button class="wl-add" data-id="${p.id}">+ Add to Cart</button>
+        </div>
+      </div>`;
+  }
+
+  function addToCart(btn, id){
+    const p = getProductById(id);
+    if (!p) return;
+    let cart = JSON.parse(localStorage.getItem('gg_cart') || '[]');
+    const existing = cart.find(i => i.id === p.id);
+    if (existing) existing.qty = (existing.qty || 1) + 1;
+    else cart.push({ id: p.id, name: p.name, price: p.price, img: p.image, qty: 1 });
+    localStorage.setItem('gg_cart', JSON.stringify(cart));
+    btn.textContent = '✓ Added'; btn.disabled = true;
+    showToast('🛒 ' + p.name + ' added to cart!');
+  }
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  render();
+</script>
+</body>
+</html>

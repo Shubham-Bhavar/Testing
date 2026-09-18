@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Search — GiftGenius</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/css/category.css"/>
+<style>
+  .search-hero{padding:44px 5% 8px;max-width:720px;margin:0 auto}
+  .search-hero h1{font-family:var(--font-serif);font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:700;color:var(--text);margin-bottom:16px}
+  .search-box-wrap{position:relative}
+  .search-box{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);padding:13px 16px;transition:border-color var(--trans)}
+  .search-box:focus-within{border-color:var(--gold)}
+  .search-box svg{flex-shrink:0;color:var(--text-muted)}
+  .search-box input{flex:1;border:none;outline:none;background:none;font-family:var(--font-sans);font-size:15px;color:var(--text)}
+  .search-suggest{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);box-shadow:var(--shadow-md);z-index:50;overflow:hidden;display:none}
+  .search-suggest.open{display:block}
+  .search-suggest-item{padding:11px 16px;font-size:13.5px;color:var(--text);cursor:pointer;transition:background var(--trans)}
+  .search-suggest-item:hover{background:var(--gold-dim)}
+
+  .browse-block{max-width:900px;margin:0 auto;padding:32px 24px}
+  .browse-block h3{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px}
+  .recent-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+  .recent-chip{background:var(--teal-pale);color:var(--teal-dark);border:1px solid rgba(110,198,207,.25);border-radius:20px;padding:6px 14px;font-size:12.5px;font-weight:500;cursor:pointer}
+  [data-theme="dark"] .recent-chip{color:var(--teal)}
+  .browse-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:640px){.browse-tiles{grid-template-columns:repeat(2,1fr)}}
+  .browse-tile{display:block;background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);padding:16px;text-align:center;text-decoration:none;transition:all var(--trans)}
+  .browse-tile:hover{border-color:var(--gold);transform:translateY(-3px)}
+  .browse-tile .ic{font-size:1.5rem;margin-bottom:4px}
+  .browse-tile .tt{font-family:var(--font-serif);font-size:13px;font-weight:600;color:var(--text)}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="../index.html"><div class="logo-mark">🎁</div>Gift<em>Genius</em></a>
+  <nav class="header-nav">
+    <a href="../index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="quiz.html">Gift Quiz</a>
+    <a href="cultureconnect.html">CultureConnect</a>
+    <a href="festival.html">Festival Special</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html">My Account</a>
+    <a href="cart.html">🛒 Cart</a>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+  </nav>
+</header>
+
+<div class="breadcrumb"><a href="../index.html">Home</a> › <span id="bcLabel">Search</span></div>
+
+<div class="search-hero">
+  <h1 id="searchHeading">Search Gifts</h1>
+  <div class="search-box-wrap">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" id="searchInput" placeholder="Search for candles, hampers, engraved gifts…" autocomplete="off" aria-label="Search gifts"/>
+    </div>
+    <div class="search-suggest" id="searchSuggest"></div>
+  </div>
+</div>
+
+<div id="browseArea">
+  <div class="browse-block" id="recentBlock" hidden>
+    <h3>Recent Searches</h3>
+    <div class="recent-chips" id="recentChips"></div>
+  </div>
+  <div class="browse-block">
+    <h3>Popular Categories</h3>
+    <div class="browse-tiles" id="popularTiles"></div>
+  </div>
+  <div class="browse-block">
+    <h3>Trending Right Now</h3>
+    <div class="product-grid" id="trendingGrid"></div>
+  </div>
+</div>
+
+<div id="resultsArea" hidden>
+  <div class="cat-toolbar" id="catToolbar">
+    <p class="result-count" id="resultCount"></p>
+    <div class="toolbar-actions">
+      <select class="sort-select" id="sortSelect">
+        <option value="featured">Featured</option>
+        <option value="newest">Newest</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="rating">Top Rated</option>
+      </select>
+      <button class="filter-toggle" id="filterToggleBtn">⚙ Filters <span class="count" id="filterCount" style="display:none">0</span></button>
+    </div>
+  </div>
+  <div class="chip-row" id="chipRow" hidden></div>
+  <div class="cat-body">
+    <div class="filter-scrim" id="filterScrim"></div>
+    <aside class="filter-panel" id="filterPanel"></aside>
+    <div>
+      <div class="product-grid" id="productGrid"></div>
+      <div class="cat-empty" id="catEmpty" hidden>
+        <div class="cat-empty-icon">🔍</div>
+        <h3>No gifts match "<span id="emptyQueryLabel"></span>"</h3>
+        <p>Try a different word, or browse a category instead.</p>
+        <a class="btn-outline" href="categories.html">Browse Categories</a>
+      </div>
+    </div>
+  </div>
+  <div class="section-block" id="curatedSection">
+    <h2>You Might Also Love 💫</h2>
+    <div class="product-grid" id="curatedGrid"></div>
+  </div>
+</div>
+
+<div class="qv-overlay" id="qvOverlay">
+  <div class="qv-modal">
+    <button class="qv-close" id="qvClose" aria-label="Close quick view">✕</button>
+    <div class="qv-img"><img id="qvImg" alt=""/></div>
+    <div class="qv-info">
+      <p class="qv-cat" id="qvCat"></p>
+      <h3 class="qv-name" id="qvName"></h3>
+      <p class="qv-rating" id="qvRating"></p>
+      <p class="qv-price"><span class="og" id="qvOg"></span><span class="now" id="qvNow"></span></p>
+      <p class="qv-desc" id="qvDesc"></p>
+      <button class="btn-primary" id="qvAddBtn">Add to Cart →</button>
+      <button class="btn-outline" id="qvDetailsBtn" style="width:100%">View Full Details</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<footer>© 2026 GiftGenius. All rights reserved.</footer>
+
+<script src="../assets/js/products.js"></script>
+<script src="../assets/js/category.js"></script>
+<script>
+  const saved = localStorage.getItem('gg_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  themeBtn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('gg_theme', next);
+    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+
+  const RECENT_KEY = 'gg_recent_searches';
+  function getRecent() { try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch (_) { return []; } }
+  function pushRecent(q) {
+    let recent = getRecent().filter(r => r.toLowerCase() !== q.toLowerCase());
+    recent.unshift(q);
+    recent = recent.slice(0, 6);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(recent));
+  }
+
+  function textMatch(p, q) {
+    const hay = [p.name, p.description, p.category, ...(p.tags || []), ...(p.occasion || [])].join(' ').toLowerCase();
+    return hay.includes(q.toLowerCase());
+  }
+
+  function renderBrowseArea() {
+    const recent = getRecent();
+    document.getElementById('recentBlock').hidden = !recent.length;
+    document.getElementById('recentChips').innerHTML = recent.map(r => `<button class="recent-chip">${r}</button>`).join('');
+    document.querySelectorAll('.recent-chip').forEach((btn, i) => btn.addEventListener('click', () => runSearch(recent[i])));
+
+    document.getElementById('popularTiles').innerHTML = window.CATEGORY_LIST.slice(0, 8).map(c =>
+      `<a class="browse-tile" href="${c.path}"><div class="ic">${c.icon}</div><div class="tt">${c.title}</div></a>`
+    ).join('');
+
+    const trending = PRODUCTS.slice().sort((a, b) => b.rating - a.rating).slice(0, 4);
+    document.getElementById('trendingGrid').innerHTML = trending.map(buildProductCard).join('');
+    document.getElementById('trendingGrid').querySelectorAll('.pcard').forEach(c => c.classList.add('visible'));
+  }
+
+  function runSearch(q) {
+    q = (q || '').trim();
+    const input = document.getElementById('searchInput');
+    input.value = q;
+    closeSuggest();
+
+    if (!q) {
+      document.getElementById('browseArea').hidden = false;
+      document.getElementById('resultsArea').hidden = true;
+      history.replaceState(null, '', 'search.html');
+      return;
+    }
+
+    pushRecent(q);
+    history.replaceState(null, '', 'search.html?q=' + encodeURIComponent(q));
+    document.getElementById('browseArea').hidden = true;
+    document.getElementById('resultsArea').hidden = false;
+    document.getElementById('searchHeading').textContent = `Search results for "${q}"`;
+    document.getElementById('emptyQueryLabel').textContent = q;
+
+    Category.render({
+      pageTitle: `Search: ${q} — GiftGenius`,
+      breadcrumb: `Search: "${q}"`,
+      eyebrow: '', heroTitle: '', heroDesc: '',
+      match: p => textMatch(p, q),
+      curatedFallback: null,
+      related: []
+    });
+  }
+
+  function renderSuggestions(q) {
+    const box = document.getElementById('searchSuggest');
+    if (!q) { closeSuggest(); return; }
+    const matches = PRODUCTS.filter(p => p.name.toLowerCase().includes(q.toLowerCase())).slice(0, 6);
+    if (!matches.length) { closeSuggest(); return; }
+    box.innerHTML = matches.map(p => `<div class="search-suggest-item" data-q="${p.name}">${p.name}</div>`).join('');
+    box.classList.add('open');
+    box.querySelectorAll('.search-suggest-item').forEach(el => el.addEventListener('mousedown', e => { e.preventDefault(); runSearch(el.dataset.q); }));
+  }
+  function closeSuggest() { document.getElementById('searchSuggest').classList.remove('open'); }
+
+  const input = document.getElementById('searchInput');
+  let debounceTimer;
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => renderSuggestions(input.value), 180);
+  });
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(input.value); });
+  input.addEventListener('blur', () => setTimeout(closeSuggest, 150));
+  document.addEventListener('click', e => { if (!e.target.closest('.search-box-wrap')) closeSuggest(); });
+
+  renderBrowseArea();
+  const initialQ = new URLSearchParams(location.search).get('q');
+  if (initialQ) runSearch(initialQ);
+</script>
+</body>
+</html>

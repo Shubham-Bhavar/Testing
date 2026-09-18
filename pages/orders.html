@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Order History — GiftGenius</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --cream:#E6F7FA; --cream-dark:#D0EFF5; --gold:#B8791A; --gold-light:#D4AF37; --gold-dim:rgba(212,175,55,0.12);
+    --ink:#0F2225; --charcoal:#1A3035; --warm-mid:#3A5A60; --border-soft:#B0DDE6; --white:#FFFFFF;
+    --danger:#B83232; --success:#1A7A5E; --teal:#6EC6CF; --teal-dark:#3A8F98; --teal-pale:rgba(110,198,207,0.12);
+    --font-serif:'Cormorant Garamond',Georgia,serif; --font-sans:'Outfit',sans-serif; --font-mono:'DM Mono',monospace;
+    --radius:14px; --radius-sm:8px; --shadow-sm:0 2px 16px rgba(26,22,18,0.07); --shadow-md:0 8px 36px rgba(26,22,18,0.12);
+    --trans:0.28s cubic-bezier(.4,0,.2,1); --glass-bg:rgba(230,247,250,0.55); --glass-border:rgba(255,255,255,0.35);
+    --bg:var(--cream); --surface:var(--white); --text:var(--ink); --text-muted:var(--warm-mid);
+  }
+  [data-theme="dark"]{
+    --bg:#0F1A1C; --cream-dark:#162428; --surface:#1E2A2D; --white:#1E2A2D; --text:#F5F5F5; --ink:#F5F5F5;
+    --text-muted:#8AABB0; --charcoal:#243035; --border-soft:#263840; --teal:#4FB3BF; --teal-pale:rgba(79,179,191,0.12);
+    --shadow-sm:0 2px 16px rgba(0,0,0,0.4); --shadow-md:0 8px 36px rgba(0,0,0,0.5); --gold-dim:rgba(212,175,55,0.1);
+    --glass-bg:rgba(15,26,28,0.55); --glass-border:rgba(255,255,255,0.08);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-sans);background:var(--bg);color:var(--text);transition:background .3s,color .3s;position:relative}
+  body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  [data-theme="dark"] body::before{opacity:.05;mix-blend-mode:overlay}
+
+  .site-header{position:sticky;top:0;z-index:200;background:var(--glass-bg);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--glass-border);padding:0 5%;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .logo{font-family:var(--font-serif);font-size:24px;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:9px}
+  .logo-mark{width:32px;height:32px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+  [data-theme="dark"] .logo-mark{background:#C5E8F0}
+  .logo em{font-style:italic;color:var(--gold)}
+  .header-nav{display:flex;align-items:center;gap:20px}
+  .header-nav a{font-size:13.5px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:color var(--trans)}
+  .header-nav a:hover,.header-nav a.active{color:var(--gold)}
+  .theme-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border-soft);background:transparent;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);transition:var(--trans)}
+  .theme-btn:hover{border-color:var(--gold);background:var(--gold-dim)}
+  .demo-banner{background:var(--gold-dim);border-bottom:1px solid rgba(184,121,26,.25);text-align:center;padding:9px 16px;font-size:12.5px;color:var(--gold);font-family:var(--font-mono)}
+
+  .page-head{max-width:800px;margin:0 auto;padding:36px 24px 4px}
+  .page-head h1{font-family:var(--font-serif);font-size:clamp(1.8rem,3.4vw,2.4rem);font-weight:700;color:var(--text)}
+
+  .orders-wrap{max-width:800px;margin:0 auto;padding:20px 24px 64px;display:flex;flex-direction:column;gap:14px}
+  .order-row{display:flex;align-items:center;gap:16px;background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);padding:18px 20px;cursor:pointer;transition:all var(--trans);text-decoration:none;color:inherit}
+  .order-row:hover{border-color:var(--gold);box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+  .order-thumb{width:56px;height:56px;border-radius:var(--radius-sm);object-fit:cover;flex-shrink:0;background:var(--cream-dark)}
+  .order-info{flex:1;min-width:0}
+  .order-id{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);margin-bottom:3px}
+  .order-name{font-weight:600;font-size:14.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .order-date{font-size:12px;color:var(--text-muted);margin-top:2px}
+  .order-right{text-align:right;flex-shrink:0}
+  .order-total{font-family:var(--font-mono);font-weight:700;color:var(--text);margin-bottom:6px}
+  .status-pill{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11.5px;font-weight:600}
+  .status-pill.delivered{background:rgba(26,122,94,.12);color:var(--success)}
+  .status-pill.in-transit{background:var(--gold-dim);color:var(--gold)}
+  .status-pill.processing{background:var(--teal-pale);color:var(--teal-dark)}
+
+  .orders-empty{text-align:center;padding:60px 24px;color:var(--text-muted)}
+  footer{text-align:center;padding:32px 24px;color:var(--text-muted);font-size:13px;border-top:1px solid var(--border-soft);background:var(--surface);font-family:var(--font-mono)}
+  @media(max-width:768px){.header-nav a:not(.active){display:none}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="../index.html"><div class="logo-mark">🎁</div>Gift<em>Genius</em></a>
+  <nav class="header-nav">
+    <a href="../index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="search.html">Search</a>
+    <a href="quiz.html">Gift Quiz</a>
+    <a href="cultureconnect.html">CultureConnect</a>
+    <a href="festival.html">Festival Special</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html">My Account</a>
+    <a href="orders.html" class="active">Order History</a>
+    <a href="cart.html">🛒 Cart</a>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+  </nav>
+</header>
+
+<div class="demo-banner">✦ Demo preview — showing sample orders. Real order history arrives with the backend.</div>
+
+<div class="page-head"><h1>Order History</h1></div>
+<div class="orders-wrap" id="ordersWrap"></div>
+
+<footer>© 2026 GiftGenius. All rights reserved.</footer>
+
+<script>
+  const saved = localStorage.getItem('gg_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  themeBtn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('gg_theme', next);
+    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+
+  const DEMO_ORDERS = [
+    { id: 'GG-118203', date: '2 Sep 2026', total: 1798, status: 'delivered', name: 'Engraved Timepiece + 1 more', thumb: 'https://etchcraftemporium.in/cdn/shop/files/ChatGPT_Image_Aug_14_2025_07_16_41_PM.png?v=1755179225&width=800' },
+    { id: 'GG-482910', date: '9 Sep 2026', total: 499, status: 'in-transit', name: 'Luxury Hamper Box', thumb: 'https://t4.ftcdn.net/jpg/05/32/64/27/240_F_532642742_3lStpC5P0U4FrndE82prkwm61F5OnQgj.jpg' },
+    { id: 'GG-903217', date: '11 Sep 2026', total: 599, status: 'processing', name: 'Classic Rose Bouquet', thumb: 'https://www.uflowershop.com/1294-large_default/valentine-s-day-classic-red-rose-bouquet.webp' }
+  ];
+
+  function statusLabel(s){
+    return { delivered: '✅ Delivered', 'in-transit': '🚚 In Transit', processing: '🔄 Processing' }[s] || s;
+  }
+
+  function render(){
+    let orders = DEMO_ORDERS.slice();
+    try {
+      const last = JSON.parse(localStorage.getItem('gg_last_order') || 'null');
+      if (last && !orders.find(o => o.id === last.id)) {
+        orders.unshift({
+          id: last.id, date: 'Just now', total: last.total || 0, status: 'processing',
+          name: (last.items && last.items[0] ? last.items[0].name : 'Your order') + (last.items && last.items.length > 1 ? ` + ${last.items.length - 1} more` : ''),
+          thumb: last.items && last.items[0] ? last.items[0].img : ''
+        });
+      }
+    } catch(_) {}
+
+    const wrap = document.getElementById('ordersWrap');
+    if (!orders.length) {
+      wrap.innerHTML = `<div class="orders-empty">No orders yet — once you place one, it'll show up here.</div>`;
+      return;
+    }
+
+    wrap.innerHTML = orders.map(o => `
+      <a class="order-row" data-id="${o.id}">
+        <img class="order-thumb" src="${o.thumb || ''}" alt=""/>
+        <div class="order-info">
+          <div class="order-id">${o.id}</div>
+          <div class="order-name">${o.name}</div>
+          <div class="order-date">${o.date}</div>
+        </div>
+        <div class="order-right">
+          <div class="order-total">₹${o.total.toLocaleString('en-IN')}</div>
+          <span class="status-pill ${o.status}">${statusLabel(o.status)}</span>
+        </div>
+      </a>`).join('');
+
+    document.querySelectorAll('.order-row').forEach(row => {
+      row.addEventListener('click', () => {
+        localStorage.setItem('gg_viewed_order', row.dataset.id);
+        location.href = 'order-detail.html';
+      });
+    });
+  }
+
+  render();
+</script>
+</body>
+</html>

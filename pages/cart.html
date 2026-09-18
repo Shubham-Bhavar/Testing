@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cart & Checkout — GiftGenius</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --cream:#E6F7FA; --cream-dark:#D0EFF5; --gold:#B8791A; --gold-light:#D4AF37; --gold-dim:rgba(212,175,55,0.12);
+    --ink:#0F2225; --charcoal:#1A3035; --warm-mid:#3A5A60; --border-soft:#B0DDE6; --white:#FFFFFF;
+    --danger:#B83232; --success:#1A7A5E; --teal:#6EC6CF; --teal-dark:#3A8F98; --teal-pale:rgba(110,198,207,0.12);
+    --font-serif:'Cormorant Garamond',Georgia,serif; --font-sans:'Outfit',sans-serif; --font-mono:'DM Mono',monospace;
+    --radius:14px; --radius-sm:8px; --shadow-sm:0 2px 16px rgba(26,22,18,0.07); --shadow-md:0 8px 36px rgba(26,22,18,0.12);
+    --trans:0.28s cubic-bezier(.4,0,.2,1);
+    --bg:var(--cream); --surface:var(--white); --text:var(--ink); --text-muted:var(--warm-mid); --header-bg:rgba(230,247,250,0.95);
+  }
+  [data-theme="dark"]{
+    --bg:#0F1A1C; --cream-dark:#162428; --surface:#1E2A2D; --white:#1E2A2D; --text:#F5F5F5; --ink:#F5F5F5;
+    --text-muted:#8AABB0; --charcoal:#243035; --border-soft:#263840; --teal:#4FB3BF; --teal-pale:rgba(79,179,191,0.12);
+    --header-bg:rgba(15,26,28,0.97); --shadow-sm:0 2px 16px rgba(0,0,0,0.4); --shadow-md:0 8px 36px rgba(0,0,0,0.5); --gold-dim:rgba(212,175,55,0.1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-sans);background:var(--bg);color:var(--text);transition:background .3s,color .3s;position:relative}
+  body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  [data-theme="dark"] body::before{opacity:.05;mix-blend-mode:overlay}
+  img{display:block;max-width:100%}
+
+  .site-header{position:sticky;top:0;z-index:200;background:var(--header-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-soft);padding:0 5%;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .logo{font-family:var(--font-serif);font-size:24px;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:9px}
+  .logo-mark{width:32px;height:32px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+  [data-theme="dark"] .logo-mark{background:#C5E8F0}
+  .logo em{font-style:italic;color:var(--gold)}
+  .header-nav{display:flex;align-items:center;gap:22px}
+  .header-nav a{font-size:13.5px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:color var(--trans)}
+  .header-nav a:hover,.header-nav a.active{color:var(--gold)}
+  @media(max-width:768px){.header-nav a:not(.active){display:none}}
+  .theme-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border-soft);background:transparent;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);transition:var(--trans)}
+  .theme-btn:hover{border-color:var(--gold);background:var(--gold-dim)}
+
+  .steps-bar{background:var(--surface);padding:16px 24px;border-bottom:1px solid var(--border-soft)}
+  .steps-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:center}
+  .step{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--border-soft)}
+  .step.active{color:var(--gold)}
+  .step.done{color:var(--success)}
+  .step-num{width:28px;height:28px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+  .step.done .step-num::before{content:'✓'}
+  .step-divider{flex:1;max-width:60px;height:2px;background:var(--border-soft);margin:0 8px}
+
+  .page-wrap{max-width:1000px;margin:32px auto 60px;padding:0 24px;display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start}
+  @media(max-width:768px){.page-wrap{grid-template-columns:1fr}}
+
+  .section-title{font-family:var(--font-serif);font-size:1.5rem;margin-bottom:20px;color:var(--text)}
+
+  .empty-cart{background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);padding:56px 32px;text-align:center;box-shadow:var(--shadow-sm)}
+  .empty-icon{font-size:3.5rem;margin-bottom:16px}
+  .empty-cart h3{font-family:var(--font-serif);font-size:1.4rem;margin-bottom:8px;color:var(--text)}
+  .empty-cart p{color:var(--text-muted);font-size:.9rem;margin-bottom:24px}
+  .btn-shop{display:inline-block;padding:13px 32px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--ink);border-radius:var(--radius-sm);font-weight:600;font-size:.95rem;text-decoration:none;transition:all var(--trans)}
+  .btn-shop:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+
+  .cart-item{background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);padding:20px;display:flex;gap:16px;box-shadow:var(--shadow-sm);margin-bottom:14px;align-items:flex-start}
+  .item-img{width:88px;height:88px;border-radius:var(--radius-sm);object-fit:cover;flex-shrink:0}
+  .item-body{flex:1}
+  .item-name{font-weight:600;font-size:1rem;margin-bottom:4px;color:var(--text)}
+  .item-meta{font-size:.8rem;color:var(--text-muted);margin-bottom:10px}
+  .item-price{font-size:1.1rem;font-weight:700;color:var(--gold);font-family:var(--font-mono)}
+  .item-qty-row{display:flex;align-items:center;gap:10px;margin-top:8px}
+  .qty-btn{width:30px;height:30px;border:1.5px solid var(--border-soft);background:var(--surface);color:var(--text);border-radius:7px;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--trans)}
+  .qty-btn:hover{border-color:var(--gold);color:var(--gold)}
+  .item-qty-num{font-weight:700;min-width:20px;text-align:center}
+  .btn-remove{margin-left:auto;font-size:.8rem;color:var(--text-muted);background:none;border:none;cursor:pointer;transition:color var(--trans)}
+  .btn-remove:hover{color:var(--danger)}
+
+  .coupon-box{background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);padding:18px 20px;box-shadow:var(--shadow-sm);margin-bottom:14px}
+  .coupon-row{display:flex;gap:10px}
+  .coupon-input{flex:1;padding:11px 14px;border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:.9rem;outline:none;transition:border-color var(--trans);background:var(--surface);color:var(--text)}
+  .coupon-input:focus{border-color:var(--gold)}
+  .btn-apply{padding:11px 20px;background:var(--ink);color:var(--cream);border:none;border-radius:var(--radius-sm);font-family:var(--font-sans);font-weight:600;font-size:.85rem;cursor:pointer;transition:background var(--trans);white-space:nowrap}
+  .btn-apply:hover{background:var(--gold);color:var(--ink)}
+  .coupon-msg{font-size:.82rem;margin-top:8px}
+  .coupon-msg.success{color:var(--success)}
+  .coupon-msg.error{color:var(--danger)}
+
+  .summary-card{background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm);position:sticky;top:90px}
+  .summary-card h3{font-family:var(--font-serif);font-size:1.2rem;margin-bottom:20px;color:var(--text)}
+  .summary-row{display:flex;justify-content:space-between;align-items:center;font-size:.9rem;margin-bottom:12px;color:var(--text-muted)}
+  .summary-row.total{font-size:1.1rem;font-weight:700;color:var(--text);margin-top:16px;padding-top:16px;border-top:1.5px solid var(--border-soft);font-family:var(--font-mono)}
+  .discount-row{color:var(--success);font-weight:600}
+  .btn-checkout{width:100%;padding:15px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;color:var(--ink);border-radius:var(--radius-sm);font-family:var(--font-sans);font-weight:600;font-size:1rem;cursor:pointer;transition:all var(--trans);box-shadow:0 8px 24px rgba(184,121,26,.3);margin-top:20px;margin-bottom:12px}
+  .btn-checkout:hover{transform:translateY(-2px)}
+  .btn-checkout:disabled{opacity:.5;cursor:default;transform:none}
+  .safe-badge{text-align:center;font-size:.78rem;color:var(--text-muted)}
+  .safe-icons{display:flex;justify-content:center;gap:12px;font-size:1.2rem;margin-bottom:4px}
+
+  #checkout-section{display:none}
+  .form-section{background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm);margin-bottom:20px}
+  .form-section h3{font-size:1rem;font-weight:600;margin-bottom:18px;display:flex;align-items:center;gap:8px;color:var(--text)}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  .form-row.full{grid-template-columns:1fr}
+  .form-input{padding:12px 14px;border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:.9rem;outline:none;transition:border-color var(--trans);width:100%;background:var(--surface);color:var(--text)}
+  .form-input:focus{border-color:var(--gold)}
+  .form-label{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--text-muted);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.06em}
+
+  .pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .pay-method{border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all var(--trans);font-size:.85rem;font-weight:500;color:var(--text)}
+  .pay-method.selected{border-color:var(--gold);background:var(--gold-dim);color:var(--gold)}
+  .pay-method input{accent-color:var(--gold)}
+
+  #success-section{display:none;text-align:center;background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);padding:56px 32px;box-shadow:var(--shadow-sm)}
+  .success-icon{font-size:4rem;margin-bottom:16px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes pop{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+  #success-section h2{font-family:var(--font-serif);font-size:1.8rem;margin-bottom:10px;color:var(--text)}
+  #success-section p{color:var(--text-muted);margin-bottom:8px}
+  .order-id-box{background:var(--gold-dim);border:1.5px dashed var(--gold);border-radius:var(--radius-sm);padding:12px 20px;display:inline-block;margin:16px 0;font-weight:700;color:var(--gold);font-size:1rem;font-family:var(--font-mono)}
+  .btn-track{display:inline-block;margin-top:16px;padding:13px 32px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--ink);border-radius:var(--radius-sm);font-weight:600;font-size:.95rem;text-decoration:none}
+
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--charcoal);color:var(--cream);padding:13px 26px;border-radius:40px;font-size:13.5px;font-weight:500;box-shadow:var(--shadow-md);transition:all .35s cubic-bezier(.34,1.56,.64,1);z-index:999;white-space:nowrap;opacity:0}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  footer{text-align:center;padding:32px 24px;color:var(--text-muted);font-size:13px;border-top:1px solid var(--border-soft);background:var(--surface);font-family:var(--font-mono)}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="../index.html"><div class="logo-mark">🎁</div>Gift<em>Genius</em></a>
+  <nav class="header-nav">
+    <a href="../index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="search.html">Search</a>
+    <a href="quiz.html">Gift Quiz</a>
+    <a href="cultureconnect.html">CultureConnect</a>
+    <a href="festival.html">Festival Special</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html">My Account</a>
+    <a href="cart.html" class="active">🛒 Cart</a>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+  </nav>
+</header>
+
+<div class="steps-bar">
+  <div class="steps-inner">
+    <div class="step active" id="step1"><div class="step-num">1</div> Cart</div>
+    <div class="step-divider"></div>
+    <div class="step" id="step2"><div class="step-num">2</div> Delivery</div>
+    <div class="step-divider"></div>
+    <div class="step" id="step3"><div class="step-num">3</div> Payment</div>
+    <div class="step-divider"></div>
+    <div class="step" id="step4"><div class="step-num">4</div> Confirmed</div>
+  </div>
+</div>
+
+<div class="page-wrap" id="main-page">
+  <div>
+    <div id="cart-section">
+      <div class="section-title" id="cart-title">Your Cart 🛒</div>
+      <div id="cart-items-list"></div>
+      <div class="coupon-box" id="coupon-box">
+        <div style="font-size:.85rem;font-weight:600;margin-bottom:10px;color:var(--text)">🎟️ Apply Coupon Code</div>
+        <div class="coupon-row">
+          <input class="coupon-input" type="text" id="coupon-inp" placeholder="Try GIFT20"/>
+          <button class="btn-apply" id="applyCouponBtn">Apply</button>
+        </div>
+        <div class="coupon-msg" id="coupon-msg"></div>
+      </div>
+    </div>
+
+    <div id="checkout-section">
+      <div class="section-title">Delivery Details 📦</div>
+      <div class="form-section">
+        <h3>📦 Shipping Address</h3>
+        <div class="form-row">
+          <div><label class="form-label">First Name</label><input class="form-input" type="text" placeholder="Shubham" id="fname"/></div>
+          <div><label class="form-label">Last Name</label><input class="form-input" type="text" placeholder="Bhavar" id="lname"/></div>
+        </div>
+        <div class="form-row full"><div><label class="form-label">Email</label><input class="form-input" type="email" placeholder="shubham@email.com" id="email"/></div></div>
+        <div class="form-row full"><div><label class="form-label">Phone</label><input class="form-input" type="tel" placeholder="+91 98765 43210" id="phone"/></div></div>
+        <div class="form-row full"><div><label class="form-label">Address</label><input class="form-input" type="text" placeholder="Flat / House No., Street, Landmark" id="address"/></div></div>
+        <div class="form-row">
+          <div><label class="form-label">City</label><input class="form-input" type="text" placeholder="Mumbai" id="city"/></div>
+          <div><label class="form-label">Pincode</label><input class="form-input" type="text" placeholder="400001" id="pincode"/></div>
+        </div>
+        <div class="form-row full">
+          <div>
+            <label class="form-label">Delivery Option</label>
+            <select class="form-input" id="delivery-type">
+              <option value="standard">Standard Delivery (2–4 days) — Free</option>
+              <option value="express">Express Delivery (Next day) — ₹99</option>
+              <option value="same_day">Same-Day Delivery (Mumbai only) — ₹149</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-section">
+        <h3>💳 Payment Method</h3>
+        <div class="pay-methods" id="payMethods">
+          <div class="pay-method selected" data-pay="upi"><input type="radio" name="pay" checked/> 📱 UPI / QR Code</div>
+          <div class="pay-method" data-pay="card"><input type="radio" name="pay"/> 💳 Credit / Debit Card</div>
+          <div class="pay-method" data-pay="netbanking"><input type="radio" name="pay"/> 🏦 Net Banking</div>
+          <div class="pay-method" data-pay="cod"><input type="radio" name="pay"/> 💰 Cash on Delivery</div>
+        </div>
+        <p style="font-size:.8rem;color:var(--text-muted)">🔒 All payments are 256-bit SSL encrypted and secure.</p>
+      </div>
+    </div>
+
+    <div id="success-section">
+      <div class="success-icon">🎉</div>
+      <h2>Order Placed Successfully!</h2>
+      <p>Thank you! Your gift is being packed with love 💕</p>
+      <div class="order-id-box" id="order-id-box">Order ID: GG-000000</div>
+      <p style="font-size:.85rem">You'll receive a confirmation on your email shortly.</p>
+      <br>
+      <a class="btn-track" href="track.html">📦 Track Your Order</a>
+      <br><br>
+      <a href="../index.html" style="font-size:.9rem;color:var(--text-muted);text-decoration:none">← Continue Shopping</a>
+    </div>
+  </div>
+
+  <div class="summary-card" id="summary-card">
+    <h3>Order Summary</h3>
+    <div id="summary-items"></div>
+    <div style="height:1px;background:var(--border-soft);margin:16px 0"></div>
+    <div class="summary-row"><span>Subtotal</span><span id="s-subtotal">₹0</span></div>
+    <div class="summary-row discount-row" id="s-discount-row" style="display:none"><span>Discount (GIFT20)</span><span id="s-discount">−₹0</span></div>
+    <div class="summary-row"><span>Delivery</span><span id="s-delivery">Free</span></div>
+    <div class="summary-row total"><span>Total</span><span id="s-total">₹0</span></div>
+    <button class="btn-checkout" id="main-cta">Proceed to Checkout →</button>
+    <div class="safe-badge"><div class="safe-icons">💳🏦📱💰</div>Secure payments • 7-day returns</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<footer>© 2026 GiftGenius. All rights reserved.</footer>
+
+<script>
+  const saved = localStorage.getItem('gg_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  themeBtn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('gg_theme', next);
+    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+
+  let cart = JSON.parse(localStorage.getItem('gg_cart') || '[]');
+  let discount = 0;
+  let currentStep = 1;
+  let selectedPay = 'upi';
+
+  function saveCart(){ localStorage.setItem('gg_cart', JSON.stringify(cart)); }
+
+  function renderCart(){
+    const list = document.getElementById('cart-items-list');
+    const couponBox = document.getElementById('coupon-box');
+    if (!cart.length) {
+      list.innerHTML = `<div class="empty-cart"><div class="empty-icon">🛒</div><h3>Your cart is empty</h3><p>Looks like you haven't added any gifts yet.</p><a class="btn-shop" href="../index.html">Shop Gifts →</a></div>`;
+      couponBox.style.display = 'none';
+      document.getElementById('main-cta').disabled = true;
+    } else {
+      couponBox.style.display = 'block';
+      document.getElementById('main-cta').disabled = false;
+      list.innerHTML = cart.map((item, i) => `
+        <div class="cart-item">
+          <img class="item-img" src="${item.img}" alt="${item.name}"/>
+          <div class="item-body">
+            <div class="item-name">${item.name}</div>
+            <div class="item-meta">${item.customName ? '✏️ ' + item.customName : 'Standard gift wrapping'}</div>
+            <div class="item-price">₹${(item.price * item.qty).toLocaleString('en-IN')}</div>
+            <div class="item-qty-row">
+              <button class="qty-btn" data-act="minus" data-idx="${i}">−</button>
+              <span class="item-qty-num">${item.qty}</span>
+              <button class="qty-btn" data-act="plus" data-idx="${i}">+</button>
+              <button class="btn-remove" data-act="remove" data-idx="${i}">✕ Remove</button>
+            </div>
+          </div>
+        </div>`).join('');
+    }
+    renderSummary();
+  }
+
+  function renderSummary(){
+    const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const total = Math.max(0, subtotal - discount);
+    document.getElementById('s-subtotal').textContent = '₹' + subtotal.toLocaleString('en-IN');
+    document.getElementById('s-total').textContent = '₹' + total.toLocaleString('en-IN');
+    if (discount > 0) { document.getElementById('s-discount-row').style.display = 'flex'; document.getElementById('s-discount').textContent = '−₹' + discount; }
+    else document.getElementById('s-discount-row').style.display = 'none';
+    document.getElementById('summary-items').innerHTML = cart.map(i => `<div class="summary-row"><span style="font-size:.82rem">${i.name} ×${i.qty}</span><span>₹${(i.price * i.qty).toLocaleString('en-IN')}</span></div>`).join('');
+  }
+
+  document.getElementById('cart-items-list').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    const idx = Number(btn.dataset.idx);
+    if (btn.dataset.act === 'minus') { cart[idx].qty = Math.max(1, cart[idx].qty - 1); saveCart(); renderCart(); }
+    if (btn.dataset.act === 'plus') { cart[idx].qty += 1; saveCart(); renderCart(); }
+    if (btn.dataset.act === 'remove') { cart.splice(idx, 1); saveCart(); renderCart(); showToast('Item removed'); }
+  });
+
+  document.getElementById('applyCouponBtn').addEventListener('click', () => {
+    const code = document.getElementById('coupon-inp').value.trim().toUpperCase();
+    const msg = document.getElementById('coupon-msg');
+    if (code === 'GIFT20') { discount = Math.round(cart.reduce((s, i) => s + i.price * i.qty, 0) * 0.20); msg.className = 'coupon-msg success'; msg.textContent = '✅ 20% discount applied!'; renderSummary(); }
+    else if (code === 'WELCOME') { discount = 100; msg.className = 'coupon-msg success'; msg.textContent = '✅ ₹100 off applied!'; renderSummary(); }
+    else { msg.className = 'coupon-msg error'; msg.textContent = '❌ Invalid coupon code. Try GIFT20'; }
+  });
+
+  document.getElementById('main-cta').addEventListener('click', () => {
+    if (currentStep === 1) {
+      document.getElementById('cart-section').style.display = 'none';
+      document.getElementById('checkout-section').style.display = 'block';
+      document.getElementById('main-cta').textContent = '✅ Place Order';
+      document.getElementById('cart-title').textContent = 'Checkout';
+      setStep(2); currentStep = 2;
+    } else if (currentStep === 2) {
+      placeOrder();
+    }
+  });
+
+  function placeOrder(){
+    const fname = document.getElementById('fname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const address = document.getElementById('address').value.trim();
+    if (!fname || !email || !phone || !address) { showToast('⚠️ Please fill all required fields'); return; }
+
+    const orderId = 'GG-' + Math.floor(100000 + Math.random() * 900000);
+    localStorage.setItem('gg_last_order', JSON.stringify({ id: orderId, name: fname, items: cart, total: cart.reduce((s, i) => s + i.price * i.qty, 0) - discount, pay: selectedPay }));
+    localStorage.removeItem('gg_cart');
+
+    document.getElementById('checkout-section').style.display = 'none';
+    document.getElementById('success-section').style.display = 'block';
+    document.getElementById('summary-card').style.display = 'none';
+    document.getElementById('order-id-box').textContent = 'Order ID: ' + orderId;
+    setStep(4);
+  }
+
+  function setStep(n){
+    ['step1', 'step2', 'step3', 'step4'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.className = 'step';
+      if (i + 1 < n) el.classList.add('done');
+      else if (i + 1 === n) el.classList.add('active');
+    });
+  }
+
+  document.getElementById('payMethods').addEventListener('click', e => {
+    const el = e.target.closest('.pay-method');
+    if (!el) return;
+    selectedPay = el.dataset.pay;
+    document.querySelectorAll('.pay-method').forEach(x => x.classList.remove('selected'));
+    el.classList.add('selected');
+  });
+
+  function showToast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2800); }
+
+  renderCart();
+</script>
+</body>
+</html>

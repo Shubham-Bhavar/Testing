@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Festival Special — GiftGenius</title>
+  <meta name="description" content="Celebrate Diwali, Rakhi and every Indian festival with curated gifting from GiftGenius.">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:#E6F7FA; --cream-dark:#D0EFF5; --parchment:#C5E8F0;
+      --gold:#B8791A; --gold-light:#D4AF37; --gold-dim:rgba(212,175,55,0.12);
+      --ink:#0F2225; --charcoal:#1A3035; --warm-mid:#3A5A60;
+      --border-soft:#B0DDE6; --white:#FFFFFF; --teal:#6EC6CF; --teal-dark:#3A8F98; --teal-pale:rgba(110,198,207,0.12);
+      --seal:#7A2036; --seal-light:#A13049;
+      --font-serif:'Cormorant Garamond',Georgia,serif; --font-sans:'Outfit',sans-serif; --font-mono:'DM Mono',monospace;
+      --radius:14px; --radius-sm:8px;
+      --shadow-sm:0 2px 16px rgba(26,22,18,0.07); --shadow-md:0 8px 36px rgba(26,22,18,0.13);
+      --trans:0.28s cubic-bezier(.4,0,.2,1);
+      --bg:var(--cream); --surface:var(--white); --text:var(--ink); --text-muted:var(--warm-mid); --header-bg:rgba(230,247,250,0.95);
+    }
+    [data-theme="dark"] {
+      --bg:#0F1A1C; --cream-dark:#162428; --parchment:#1E2A2D; --surface:#1E2A2D; --white:#1E2A2D;
+      --text:#F5F5F5; --ink:#F5F5F5; --text-muted:#8AABB0; --charcoal:#243035; --border-soft:#263840;
+      --teal:#4FB3BF; --teal-pale:rgba(79,179,191,0.12); --header-bg:rgba(15,26,28,0.97);
+      --shadow-sm:0 2px 16px rgba(0,0,0,0.4); --shadow-md:0 8px 36px rgba(0,0,0,0.5); --gold-dim:rgba(212,175,55,0.1);
+      --seal:#B23A56; --seal-light:#D1516E;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font-sans);background:var(--bg);color:var(--text);transition:background .3s,color .3s;overflow-x:hidden;;position:relative}
+    body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    [data-theme="dark"] body::before{opacity:.05;mix-blend-mode:overlay}
+    img{display:block;max-width:100%;}
+
+    .site-header{position:sticky;top:0;z-index:200;background:var(--header-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-soft);padding:0 5%;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+    .logo{font-family:var(--font-serif);font-size:24px;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:9px;}
+    .logo-mark{width:32px;height:32px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+    [data-theme="dark"] .logo-mark{background:var(--parchment);}
+    .logo em{font-style:italic;color:var(--gold);}
+    .header-nav{display:flex;align-items:center;gap:22px;}
+    .header-nav a{font-size:13.5px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:color var(--trans);}
+    .header-nav a:hover{color:var(--gold);}
+    .header-nav a.active{color:var(--text);font-weight:600;}
+    .theme-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border-soft);background:transparent;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);transition:var(--trans);}
+    .theme-btn:hover{border-color:var(--gold);background:var(--gold-dim);}
+
+    .fs-hero{min-height:64vh;background:var(--charcoal);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:64px 24px;}
+    .fs-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 25% 30%,rgba(212,175,55,.14) 0%,transparent 50%),radial-gradient(circle at 78% 65%,rgba(110,198,207,.08) 0%,transparent 50%);}
+    .fs-hero-inner{position:relative;z-index:2;max-width:640px;}
+    .fs-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;color:var(--gold-light);text-transform:uppercase;margin-bottom:20px;}
+    .eyebrow-line{width:28px;height:1px;background:var(--gold-light);opacity:.6;}
+    .fs-hero h1{font-family:var(--font-serif);font-size:clamp(2.2rem,5vw,3.6rem);font-weight:600;line-height:1.1;letter-spacing:-0.02em;color:var(--cream);margin-bottom:16px;}
+    .fs-hero h1 em{font-style:italic;color:var(--gold-light);}
+    .fs-hero p{font-size:15px;color:rgba(230,247,250,.65);line-height:1.8;margin-bottom:30px;}
+    .fs-hero-badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:8px;}
+    .fs-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.25);color:var(--gold-light);padding:7px 14px;border-radius:20px;font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;}
+
+    .sec-header{text-align:center;padding:60px 24px 40px;}
+    .sec-eyebrow{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+    .sec-line{width:32px;height:1px;background:var(--gold);opacity:.5;}
+    .sec-header h2{font-family:var(--font-serif);font-size:clamp(1.9rem,3.6vw,2.6rem);font-weight:600;letter-spacing:-0.02em;color:var(--text);margin-bottom:12px;}
+    .sec-header h2 em{font-style:italic;color:var(--gold);}
+    .sec-header p{font-size:15px;color:var(--text-muted);max-width:520px;margin:0 auto;line-height:1.7;}
+
+    .fs-tabs-wrap{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:40px;padding:0 24px;}
+    .fs-tab{padding:10px 22px;border:1.5px solid var(--border-soft);background:var(--surface);border-radius:30px;font-family:var(--font-sans);font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all var(--trans);}
+    .fs-tab:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
+    .fs-tab.active{border-color:var(--gold);background:var(--gold-dim);color:var(--gold);font-weight:600;box-shadow:0 0 0 1px var(--gold);}
+
+    .fs-products{max-width:1000px;margin:0 auto;padding:0 24px 64px;}
+    .fs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px;}
+    @media(max-width:640px){.fs-grid{grid-template-columns:1fr;}}
+
+    .fs-card{background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;transition:transform var(--trans),box-shadow var(--trans),border-color var(--trans);opacity:0;transform:translateY(20px);}
+    .fs-card.visible{animation:cardReveal .5s ease forwards;}
+    @keyframes cardReveal{to{opacity:1;transform:translateY(0);}}
+    .fs-card:nth-child(1){animation-delay:.05s;} .fs-card:nth-child(2){animation-delay:.15s;}
+    .fs-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-md);border-color:var(--gold);}
+    [data-theme="dark"] .fs-card{background:var(--parchment);}
+
+    .fs-card-img{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--cream-dark);cursor:pointer;}
+    .fs-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+    .fs-card:hover .fs-card-img img{transform:scale(1.06);}
+    .fs-card-badge{position:absolute;top:12px;left:12px;background:var(--seal);color:var(--gold-light);font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:4px 11px;border-radius:3px 3px 12px 3px;border:1px solid rgba(255,255,255,.18);text-shadow:0 1px 1px rgba(0,0,0,.35);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -3px 5px rgba(0,0,0,.22),0 3px 10px rgba(15,34,37,.35);}
+    .fs-card-occasion{position:absolute;bottom:12px;right:12px;background:rgba(15,34,37,.82);backdrop-filter:blur(8px);color:var(--cream);font-family:var(--font-mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:20px;}
+    .fs-card-wish{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(15,34,37,.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all var(--trans);}
+    .fs-card-wish:hover{background:rgba(15,34,37,.9);transform:scale(1.1);}
+
+    .fs-card-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1;}
+    .fs-card-cat{font-family:var(--font-mono);font-size:9.5px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-dark);margin-bottom:6px;}
+    [data-theme="dark"] .fs-card-cat{color:var(--teal);}
+    .fs-card-name{font-family:var(--font-serif);font-size:1.28rem;font-weight:600;color:var(--text);margin-bottom:10px;cursor:pointer;}
+    .fs-card-desc{font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:14px;flex:1;}
+    .fs-card-rating{display:flex;align-items:center;gap:6px;margin-bottom:14px;}
+    .fs-card-stars{color:#F5A623;font-size:11px;}
+    .fs-card-rating-val{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);}
+    .fs-card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;}
+    .fs-card-price{display:flex;flex-direction:column;}
+    .fs-card-og{font-size:11px;color:var(--text-muted);text-decoration:line-through;font-family:var(--font-mono);}
+    .fs-card-now{font-family:var(--font-serif);font-size:1.4rem;font-weight:700;color:var(--text);line-height:1;}
+    .fs-card-add{padding:10px 18px;background:var(--ink);color:var(--cream);border:none;border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all var(--trans);}
+    .fs-card-add:hover{background:var(--gold);color:var(--ink);transform:scale(1.05);}
+    .fs-card-add:disabled{background:var(--border-soft);color:var(--text-muted);cursor:default;transform:none;}
+
+    .fs-strip{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft);}
+    .fs-strip-item{padding:26px 20px;text-align:center;border-right:1px solid var(--border-soft);}
+    .fs-strip-item:last-child{border-right:none;}
+    .fs-strip-icon{font-size:1.6rem;margin-bottom:6px;}
+    .fs-strip-title{font-weight:600;font-size:13px;color:var(--text);margin-bottom:2px;}
+    .fs-strip-sub{font-size:11.5px;color:var(--text-muted);}
+    @media(max-width:700px){.fs-strip{grid-template-columns:1fr 1fr;}}
+
+    .fs-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--charcoal);color:var(--cream);padding:13px 26px;border-radius:40px;font-size:13.5px;font-weight:500;box-shadow:var(--shadow-md);z-index:999;opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;}
+    .fs-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+    footer{text-align:center;padding:32px 24px;color:var(--text-muted);font-size:13px;border-top:1px solid var(--border-soft);background:var(--surface);font-family:var(--font-mono);}
+    @media(max-width:768px){.header-nav a:not(.active){display:none;}}
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="../index.html"><div class="logo-mark">🎁</div>Gift<em>Genius</em></a>
+  <nav class="header-nav">
+    <a href="../index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="search.html">Search</a>
+    <a href="quiz.html">Gift Quiz</a>
+    <a href="cultureconnect.html">CultureConnect</a>
+    <a href="festival.html" class="active">Festival Special</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html">My Account</a>
+    <a href="cart.html">Cart</a>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+  </nav>
+</header>
+
+<section class="fs-hero">
+  <div class="fs-hero-inner">
+    <div class="fs-eyebrow"><span class="eyebrow-line"></span> GiftGenius · Festival Special <span class="eyebrow-line"></span></div>
+    <h1>Celebrate Every <em>Festival</em> With the Perfect Gift</h1>
+    <p>From Diwali sweets to Rakhi combos — curated festive gifting, ready to ship across India.</p>
+    <div class="fs-hero-badges">
+      <span class="fs-badge">🪔 Diwali</span>
+      <span class="fs-badge">🧵 Rakhi</span>
+      <span class="fs-badge">🎁 Festive Wrapping</span>
+      <span class="fs-badge">🚀 Fast Delivery</span>
+    </div>
+  </div>
+</section>
+
+<div class="fs-strip">
+  <div class="fs-strip-item"><div class="fs-strip-icon">🪔</div><div class="fs-strip-title">Diwali</div><div class="fs-strip-sub">Sweets & hampers</div></div>
+  <div class="fs-strip-item"><div class="fs-strip-icon">🧵</div><div class="fs-strip-title">Raksha Bandhan</div><div class="fs-strip-sub">Rakhi combos</div></div>
+  <div class="fs-strip-item"><div class="fs-strip-icon">🎀</div><div class="fs-strip-title">Free Wrapping</div><div class="fs-strip-sub">On every festive order</div></div>
+  <div class="fs-strip-item"><div class="fs-strip-icon">📦</div><div class="fs-strip-title">Pan-India</div><div class="fs-strip-sub">2–4 day delivery</div></div>
+</div>
+
+<div class="sec-header">
+  <p class="sec-eyebrow"><span class="sec-line"></span> Festive Collection <span class="sec-line"></span></p>
+  <h2>Gifts for <em>Every Celebration</em></h2>
+  <p>Handpicked festive gifts, ready whenever the occasion calls</p>
+</div>
+
+<div class="fs-tabs-wrap" id="fsTabs">
+  <button class="fs-tab active" data-occasion="all">All Festivals</button>
+  <button class="fs-tab" data-occasion="diwali">🪔 Diwali</button>
+  <button class="fs-tab" data-occasion="rakhi">🧵 Rakhi</button>
+</div>
+
+<div class="fs-products"><div class="fs-grid" id="fsGrid"></div></div>
+
+<div class="fs-toast" id="fsToast"></div>
+<footer>© 2026 GiftGenius · Festival Special — Celebrating India's Festivals, One Gift at a Time</footer>
+
+<script src="../assets/js/products.js"></script>
+<script>
+  const saved = localStorage.getItem('gg_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  themeBtn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('gg_theme', next);
+    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+
+  const OCCASION = { 13: 'diwali', 14: 'rakhi' };
+  const OCC_LABEL = { 13: '🪔 Diwali', 14: '🧵 Rakhi' };
+
+  function buildCard(p){
+    const discount = Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
+    return `
+      <div class="fs-card" data-occasion="${OCCASION[p.id] || 'all'}">
+        <div class="fs-card-img" data-id="${p.id}">
+          <img src="${p.image}" alt="${p.alt}" loading="lazy"/>
+          ${discount > 0 ? `<span class="fs-card-badge">${discount}% off</span>` : ''}
+          <span class="fs-card-occasion">${OCC_LABEL[p.id] || p.category}</span>
+          <button class="fs-card-wish" data-id="${p.id}" title="Save to wishlist">🤍</button>
+        </div>
+        <div class="fs-card-body">
+          <div class="fs-card-cat">${p.category}</div>
+          <h3 class="fs-card-name" data-id="${p.id}">${p.name}</h3>
+          <p class="fs-card-desc">${p.description}</p>
+          <div class="fs-card-rating"><span class="fs-card-stars">${p.starsDisplay}</span><span class="fs-card-rating-val">${p.rating} (${p.reviewCount} reviews)</span></div>
+          <div class="fs-card-foot">
+            <div class="fs-card-price"><span class="fs-card-og">₹${p.originalPrice.toLocaleString('en-IN')}</span><span class="fs-card-now">₹${p.price.toLocaleString('en-IN')}</span></div>
+            <button class="fs-card-add" data-id="${p.id}">+ Add to Cart</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function render(filter){
+    const festival = PRODUCTS.filter(p => p.isFestival);
+    const filtered = filter === 'all' ? festival : festival.filter(p => OCCASION[p.id] === filter);
+    const grid = document.getElementById('fsGrid');
+    if (!filtered.length) {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);font-family:var(--font-serif);font-size:1.2rem;">More ${filter} gifts coming soon…</div>`;
+      return;
+    }
+    grid.innerHTML = filtered.map(buildCard).join('');
+    setTimeout(() => grid.querySelectorAll('.fs-card').forEach(c => c.classList.add('visible')), 30);
+
+    grid.querySelectorAll('.fs-card-img, .fs-card-name').forEach(el => {
+      el.addEventListener('click', () => { localStorage.setItem('gg_viewed_product', el.dataset.id); location.href = 'product.html'; });
+    });
+    grid.querySelectorAll('.fs-card-add').forEach(btn => btn.addEventListener('click', e => addToCart(e, btn.dataset.id)));
+    grid.querySelectorAll('.fs-card-wish').forEach(btn => btn.addEventListener('click', () => toggleWish(btn, Number(btn.dataset.id))));
+  }
+
+  document.getElementById('fsTabs').addEventListener('click', e => {
+    const tab = e.target.closest('.fs-tab');
+    if (!tab) return;
+    document.querySelectorAll('.fs-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    render(tab.dataset.occasion);
+  });
+
+  function addToCart(e, id){
+    const p = getProductById(Number(id));
+    if (!p) return;
+    let cart = JSON.parse(localStorage.getItem('gg_cart') || '[]');
+    const existing = cart.find(i => i.id === p.id);
+    if (existing) existing.qty = (existing.qty || 1) + 1;
+    else cart.push({ id: p.id, name: p.name, price: p.price, img: p.image, qty: 1 });
+    localStorage.setItem('gg_cart', JSON.stringify(cart));
+    e.target.textContent = '✓ Added'; e.target.disabled = true;
+    showToast('🛒 ' + p.name + ' added to cart!');
+  }
+
+  function toggleWish(btn, id){
+    let wish = JSON.parse(localStorage.getItem('gg_wishlist') || '[]');
+    if (wish.includes(id)) { wish = wish.filter(i => i !== id); btn.textContent = '🤍'; showToast('Removed from wishlist'); }
+    else { wish.push(id); btn.textContent = '❤️'; showToast('❤️ Saved to wishlist!'); }
+    localStorage.setItem('gg_wishlist', JSON.stringify(wish));
+  }
+
+  function showToast(msg){
+    const t = document.getElementById('fsToast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  render('all');
+</script>
+</body>
+</html>

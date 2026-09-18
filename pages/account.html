@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Account — GiftGenius</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --cream:#E6F7FA; --cream-dark:#D0EFF5; --gold:#B8791A; --gold-light:#D4AF37; --gold-dim:rgba(212,175,55,0.12);
+    --ink:#0F2225; --charcoal:#1A3035; --warm-mid:#3A5A60; --border-soft:#B0DDE6; --white:#FFFFFF;
+    --danger:#B83232; --success:#1A7A5E; --teal:#6EC6CF; --teal-dark:#3A8F98; --teal-pale:rgba(110,198,207,0.12);
+    --seal:#7A2036; --seal-light:#A13049;
+    --font-serif:'Cormorant Garamond',Georgia,serif; --font-sans:'Outfit',sans-serif; --font-mono:'DM Mono',monospace;
+    --radius:14px; --radius-sm:8px; --shadow-sm:0 2px 16px rgba(26,22,18,0.07); --shadow-md:0 8px 36px rgba(26,22,18,0.12);
+    --trans:0.28s cubic-bezier(.4,0,.2,1); --trans-luxury:0.6s cubic-bezier(.16,1,.3,1);
+    --glass-bg:rgba(230,247,250,0.55); --glass-border:rgba(255,255,255,0.35);
+    --bg:var(--cream); --surface:var(--white); --text:var(--ink); --text-muted:var(--warm-mid);
+  }
+  [data-theme="dark"]{
+    --bg:#0F1A1C; --cream-dark:#162428; --surface:#1E2A2D; --white:#1E2A2D; --text:#F5F5F5; --ink:#F5F5F5;
+    --text-muted:#8AABB0; --charcoal:#243035; --border-soft:#263840; --teal:#4FB3BF; --teal-pale:rgba(79,179,191,0.12);
+    --shadow-sm:0 2px 16px rgba(0,0,0,0.4); --shadow-md:0 8px 36px rgba(0,0,0,0.5); --gold-dim:rgba(212,175,55,0.1);
+    --seal:#B23A56; --seal-light:#D1516E; --glass-bg:rgba(15,26,28,0.55); --glass-border:rgba(255,255,255,0.08);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-sans);background:var(--bg);color:var(--text);transition:background .3s,color .3s;position:relative}
+  body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  [data-theme="dark"] body::before{opacity:.05;mix-blend-mode:overlay}
+  img{display:block;max-width:100%}
+
+  .site-header{position:sticky;top:0;z-index:200;background:var(--glass-bg);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--glass-border);padding:0 5%;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .logo{font-family:var(--font-serif);font-size:24px;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:9px}
+  .logo-mark{width:32px;height:32px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+  [data-theme="dark"] .logo-mark{background:#C5E8F0}
+  .logo em{font-style:italic;color:var(--gold)}
+  .header-nav{display:flex;align-items:center;gap:20px}
+  .header-nav a{font-size:13.5px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:color var(--trans)}
+  .header-nav a:hover,.header-nav a.active{color:var(--gold)}
+  .theme-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border-soft);background:transparent;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);transition:var(--trans)}
+  .theme-btn:hover{border-color:var(--gold);background:var(--gold-dim)}
+
+  .demo-banner{background:var(--gold-dim);border-bottom:1px solid rgba(184,121,26,.25);text-align:center;padding:9px 16px;font-size:12.5px;color:var(--gold);font-family:var(--font-mono)}
+
+  .acc-wrap{max-width:1000px;margin:0 auto;padding:36px 24px 64px;display:grid;grid-template-columns:260px 1fr;gap:28px}
+  @media(max-width:768px){.acc-wrap{grid-template-columns:1fr}}
+
+  .acc-side{background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm);align-self:start}
+  .acc-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:1.6rem;font-weight:700;margin-bottom:14px}
+  .acc-side h2{font-family:var(--font-serif);font-size:1.2rem;margin-bottom:2px;color:var(--text)}
+  .acc-side p{font-size:12.5px;color:var(--text-muted);margin-bottom:20px}
+  .acc-nav{display:flex;flex-direction:column;gap:2px}
+  .acc-nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:500;color:var(--text-muted);text-decoration:none;transition:all var(--trans)}
+  .acc-nav a:hover{background:var(--gold-dim);color:var(--gold)}
+  .acc-nav a.active{background:var(--gold-dim);color:var(--gold);font-weight:600}
+
+  .acc-main{display:flex;flex-direction:column;gap:20px}
+  .acc-card{background:var(--surface);border:1.5px solid var(--border-soft);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow-sm)}
+  .acc-card h3{font-family:var(--font-serif);font-size:1.15rem;margin-bottom:16px;color:var(--text)}
+  .acc-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  @media(max-width:520px){.acc-row{grid-template-columns:1fr}}
+  .acc-field label{display:block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+  .acc-field input{width:100%;padding:11px 13px;border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:13.5px;background:var(--surface);color:var(--text);outline:none;transition:border-color var(--trans)}
+  .acc-field input:focus{border-color:var(--gold)}
+  .btn-save{padding:11px 24px;background:var(--ink);color:var(--cream);border:none;border-radius:var(--radius-sm);font-family:var(--font-sans);font-weight:600;font-size:13px;cursor:pointer;transition:background var(--trans)}
+  .btn-save:hover{background:var(--gold);color:var(--ink)}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:520px){.stat-grid{grid-template-columns:1fr}}
+  .stat-box{padding:18px;background:var(--teal-pale);border-radius:var(--radius-sm);text-align:center}
+  .stat-box .n{font-family:var(--font-serif);font-size:1.6rem;font-weight:700;color:var(--text)}
+  .stat-box .l{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
+
+  .addr-card{border:1.5px solid var(--border-soft);border-radius:var(--radius-sm);padding:16px;margin-bottom:10px}
+  .addr-card:last-child{margin-bottom:0}
+  .addr-tag{display:inline-block;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);background:var(--gold-dim);padding:3px 10px;border-radius:20px;margin-bottom:8px}
+  .addr-card p{font-size:13.5px;color:var(--text);line-height:1.6}
+
+  footer{text-align:center;padding:32px 24px;color:var(--text-muted);font-size:13px;border-top:1px solid var(--border-soft);background:var(--surface);font-family:var(--font-mono)}
+  @media(max-width:768px){.header-nav a:not(.active){display:none}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="../index.html"><div class="logo-mark">🎁</div>Gift<em>Genius</em></a>
+  <nav class="header-nav">
+    <a href="../index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="search.html">Search</a>
+    <a href="quiz.html">Gift Quiz</a>
+    <a href="cultureconnect.html">CultureConnect</a>
+    <a href="festival.html">Festival Special</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html" class="active">My Account</a>
+    <a href="cart.html">🛒 Cart</a>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+  </nav>
+</header>
+
+<div class="demo-banner">✦ Demo preview — accounts aren't live yet. This screen will connect to real sign-in once the backend ships.</div>
+
+<div class="acc-wrap">
+  <aside class="acc-side">
+    <div class="acc-avatar">K</div>
+    <h2>Komal Kavtikwar</h2>
+    <p>komal@example.com</p>
+    <nav class="acc-nav">
+      <a href="account.html" class="active">👤 Profile</a>
+      <a href="orders.html">📦 Order History</a>
+      <a href="wishlist.html">🤍 Wishlist</a>
+      <a href="cart.html">🛒 Cart</a>
+    </nav>
+  </aside>
+
+  <div class="acc-main">
+    <div class="acc-card">
+      <h3>Account Overview</h3>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="n">3</div><div class="l">Orders Placed</div></div>
+        <div class="stat-box"><div class="n" id="acc-wish-count">0</div><div class="l">Wishlist Items</div></div>
+        <div class="stat-box"><div class="n">Since 2026</div><div class="l">Member</div></div>
+      </div>
+    </div>
+
+    <div class="acc-card">
+      <h3>Profile Details</h3>
+      <div class="acc-row">
+        <div class="acc-field"><label>First Name</label><input type="text" value="Komal"/></div>
+        <div class="acc-field"><label>Last Name</label><input type="text" value="Kavtikwar"/></div>
+      </div>
+      <div class="acc-row">
+        <div class="acc-field"><label>Email</label><input type="email" value="komal@example.com"/></div>
+        <div class="acc-field"><label>Phone</label><input type="tel" value="+91 90000 00000"/></div>
+      </div>
+      <button class="btn-save" id="saveBtn">Save Changes</button>
+    </div>
+
+    <div class="acc-card">
+      <h3>Saved Addresses</h3>
+      <div class="addr-card">
+        <span class="addr-tag">Home</span>
+        <p>Komal Kavtikwar<br>Pune, Maharashtra, India</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--charcoal);color:var(--cream);padding:13px 26px;border-radius:40px;font-size:13.5px;font-weight:500;box-shadow:var(--shadow-md);transition:all .35s cubic-bezier(.34,1.56,.64,1);z-index:999;white-space:nowrap;opacity:0"></div>
+<footer>© 2026 GiftGenius. All rights reserved.</footer>
+
+<script>
+  const saved = localStorage.getItem('gg_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  themeBtn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('gg_theme', next);
+    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+
+  try {
+    const wish = JSON.parse(localStorage.getItem('gg_wishlist') || '[]');
+    document.getElementById('acc-wish-count').textContent = wish.length;
+  } catch(_) {}
+
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    const t = document.getElementById('toast');
+    t.textContent = '✦ Saved (demo only — not persisted yet)';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2600);
+  });
+</script>
+</body>
+</html>
